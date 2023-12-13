@@ -47,7 +47,9 @@ i32 main(int argc, char **argv) {
 
             EndMode2D();
         }
-        DrawGUI(&state);
+
+        DrawGUI(state.viewportWidth, state.viewportHeight);
+
         EndDrawing();
     }
 

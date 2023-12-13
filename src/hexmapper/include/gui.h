@@ -3,4 +3,4 @@
 struct State;
 
 void InitGUI();
-void DrawGUI(State* state);
+void DrawGUI(f32 viewportWidth, f32 viewportHeight);
