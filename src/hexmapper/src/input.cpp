@@ -37,4 +37,16 @@ void CollectInput(Input *input) {
             input->cameraShift.y -= mouseDelta.y;
         }
     }
+
+    {  // Input mode selection - keyboard
+        if (IsKeyPressed(KEY_F1)) {
+            input->mode = INPUT_MODE_SELECT;
+        } else if (IsKeyPressed(KEY_F2)) {
+            input->mode = INPUT_MODE_PAINT;
+        } else if (IsKeyPressed(KEY_F3)) {
+            input->mode = INPUT_MODE_ROTATE;
+        } else if (IsKeyPressed(KEY_F4)) {
+            input->mode = INPUT_MODE_ERASE;
+        }
+    }
 }
