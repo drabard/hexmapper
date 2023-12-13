@@ -11,9 +11,6 @@
 #include "state.h"
 
 i32 main(int argc, char **argv) {
-    Input input;
-    State state;
-
     u32 screenWidth = 1920;
     u32 screenHeight = 1024;
 
@@ -23,7 +20,12 @@ i32 main(int argc, char **argv) {
     SetTargetFPS(60);
 
     InitGUI();
+
+    State state;
     InitState(&state, screenWidth, screenHeight);
+
+    Input input;
+    InitInput(&input);
 
     Map map = CreateMap();
 
@@ -38,6 +40,7 @@ i32 main(int argc, char **argv) {
         }
 
         BeginDrawing();
+
         {
             BeginMode2D(state.camera);
             ClearBackground(RAYWHITE);
@@ -48,7 +51,7 @@ i32 main(int argc, char **argv) {
             EndMode2D();
         }
 
-        DrawGUI(state.screenWidth, state.screenHeight);
+        ApplyGUI(state.screenWidth, state.screenHeight, &input);
 
         EndDrawing();
     }

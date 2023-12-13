@@ -1,6 +1,8 @@
 #pragma once
 
-struct State;
+#include "core.h"
+
+struct Input;
 
 void InitGUI();
-void DrawGUI(f32 viewportWidth, f32 viewportHeight);
+void ApplyGUI(f32 viewportWidth, f32 viewportHeight, Input* input);

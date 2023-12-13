@@ -1,5 +1,10 @@
 #include "input.h"
 
+void InitInput(Input *input) {
+    input->mode = INPUT_MODE_SELECT;
+    input->cameraShift = (Vector2){0, 0};
+}
+
 void CollectInput(Input *input) {
     input->cameraShift = (Vector2){0, 0};
     {  // Camera shift - keyboard

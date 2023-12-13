@@ -1,13 +1,13 @@
 #include "gui.h"
 
 #include "imgui.h"
+#include "input.h"
 #include "raylib.h"
 #include "rlImGui.h"
-#include "state.h"
 
 constexpr f32 BUTTON_BORDER_SIZE = 0.1f;
 constexpr f32 BUTTON_HEIGHT = 50.0f;
-constexpr f32 TOOLBAR_WIDTH = 500.0f + BUTTON_BORDER_SIZE * 2.0f;
+constexpr f32 TOOLBAR_WIDTH = 400.0f + BUTTON_BORDER_SIZE * 2.0f;
 constexpr f32 TOOLBAR_HEIGHT = 50.0f + BUTTON_BORDER_SIZE * 2.0f;
 constexpr f32 RIGHT_PANEL_WIDTH = 440.0f;
 constexpr f32 BOTTOM_LEFT_PANEL_WIDTH = 150.0f;
@@ -19,7 +19,7 @@ constexpr ImColor COLOR_GRAY = ImColor(0.502f, 0.502f, 0.502f);
 constexpr ImColor COLOR_LIGHT_GRAY = ImColor(0.602f, 0.602f, 0.602f);
 constexpr ImColor COLOR_PEWTER = ImColor(0.914f, 0.918f, 0.925f);
 
-void updateGUIRect(Rectangle *rect) {
+void updateGUIRect(Rectangle* rect) {
     ImVec2 panel_pos = ImGui::GetWindowPos();
     ImVec2 panel_size = ImGui::GetWindowSize();
     *rect = (Rectangle){panel_pos.x, panel_pos.y, panel_size.x, panel_size.y};
@@ -27,7 +27,7 @@ void updateGUIRect(Rectangle *rect) {
 
 void InitGUI() { rlImGuiSetup(true); }
 
-void ShowRightHandPanel(f32 screenWidth, f32 screenHeight) {
+void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input) {
     f32 panelHeight = screenHeight;
 
     ImGui::SetNextWindowPos(ImVec2(screenWidth - RIGHT_PANEL_WIDTH, 0));
@@ -40,7 +40,17 @@ void ShowRightHandPanel(f32 screenWidth, f32 screenHeight) {
     ImGui::End();
 }
 
-void ShowToolbar(f32 screenWidth, f32 screenHeight) {
+void ModeButton(const char* label, InputMode mode, Input* input,
+                f32 buttonWidth) {
+    if (input->mode == mode) ImGui::BeginDisabled();
+    if (ImGui::Button(label, ImVec2(buttonWidth, BUTTON_HEIGHT))) {
+        input->mode = mode;
+    } else if (input->mode == mode) {
+        ImGui::EndDisabled();
+    }
+}
+
+void ShowToolbar(f32 screenWidth, f32 screenHeight, Input* input) {
     f32 viewportWidth = screenWidth - RIGHT_PANEL_WIDTH;
     ImGui::SetNextWindowPos(ImVec2(0.5f * (viewportWidth - TOOLBAR_WIDTH), 0));
     ImGui::SetNextWindowSize(ImVec2(TOOLBAR_WIDTH, TOOLBAR_HEIGHT));
@@ -52,17 +62,15 @@ void ShowToolbar(f32 screenWidth, f32 screenHeight) {
     ImGui::Begin("Toolbar", 0,
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-    constexpr f32 buttonWidth = TOOLBAR_WIDTH * 0.20f;
-    ImGui::Button("Select", ImVec2(buttonWidth, BUTTON_HEIGHT));
+    constexpr f32 buttonWidth = TOOLBAR_WIDTH * 0.25f;
+
+    ModeButton("Select", INPUT_MODE_SELECT, input, buttonWidth);
     ImGui::SameLine();
-    ImGui::Button("Paint", ImVec2(buttonWidth, BUTTON_HEIGHT));
+    ModeButton("Paint", INPUT_MODE_PAINT, input, buttonWidth);
     ImGui::SameLine();
-    ImGui::Button("Rotate", ImVec2(buttonWidth, BUTTON_HEIGHT));
+    ModeButton("Rotate", INPUT_MODE_ROTATE, input, buttonWidth);
     ImGui::SameLine();
-    ImGui::Button("Erase", ImVec2(buttonWidth, BUTTON_HEIGHT));
-    ImGui::SameLine();
-    ImGui::Button("Zoom", ImVec2(buttonWidth, BUTTON_HEIGHT));
-    ImGui::SameLine();
+    ModeButton("Erase", INPUT_MODE_ERASE, input, buttonWidth);
 
     ImGui::PopStyleVar(3);
 
@@ -97,7 +105,7 @@ void ShowBottomLeftPanel(f32 screenWidth, f32 screenHeight) {
     ImGui::PopStyleVar(3);
 }
 
-void DrawGUI(f32 screenWidth, f32 screenHeight) {
+void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input) {
     rlImGuiBegin();
 
     // ImGui::ShowDemoWindow();
@@ -105,15 +113,17 @@ void DrawGUI(f32 screenWidth, f32 screenHeight) {
     ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)COLOR_PEWTER);
+    ImGui::PushStyleColor(ImGuiCol_TextDisabled,
+                          (ImVec4)ImColor(1.0f, 0.0f, 0.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)COLOR_GRAY);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)COLOR_COOL_GRAY);
     ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)COLOR_GRAY);
 
-    ShowToolbar(screenWidth, screenHeight);
+    ShowToolbar(screenWidth, screenHeight, input);
     ShowBottomLeftPanel(screenWidth, screenHeight);
-    ShowRightHandPanel(screenWidth, screenHeight);
+    ShowRightHandPanel(screenWidth, screenHeight, input);
 
-    ImGui::PopStyleColor(6);
+    ImGui::PopStyleColor(7);
 
     rlImGuiEnd();
 }
