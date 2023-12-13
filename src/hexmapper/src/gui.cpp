@@ -37,6 +37,22 @@ void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input) {
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
     //       updateGUIRect(&state->toolPanelRect);
+    const char* headerText = "Selection information";
+    switch (input->mode) {
+        case INPUT_MODE_SELECT:
+            headerText = "Select tiles";
+            break;
+        case INPUT_MODE_PAINT:
+            headerText = "Paint tiles";
+            break;
+        case INPUT_MODE_ROTATE:
+            headerText = "Rotate tiles";
+            break;
+        case INPUT_MODE_ERASE:
+            headerText = "Erase tiles";
+            break;
+    }
+    ImGui::Text(headerText);
     ImGui::End();
 }
 
