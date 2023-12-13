@@ -23,7 +23,7 @@ i32 main(int argc, char **argv) {
     SetTargetFPS(60);
 
     InitGUI();
-    InitState(&state);
+    InitState(&state, screenWidth, screenHeight);
 
     Map map = CreateMap();
 
@@ -43,12 +43,12 @@ i32 main(int argc, char **argv) {
             ClearBackground(RAYWHITE);
 
             DrawMap(&map, state.camera.target,
-                    (Vector2){(f32)state.viewportWidth, (f32)state.viewportHeight});
+                    (Vector2){(f32)state.screenWidth, (f32)state.screenHeight});
 
             EndMode2D();
         }
 
-        DrawGUI(state.viewportWidth, state.viewportHeight);
+        DrawGUI(state.screenWidth, state.screenHeight);
 
         EndDrawing();
     }

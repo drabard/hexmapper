@@ -6,16 +6,18 @@
 #include "state.h"
 
 constexpr f32 BUTTON_BORDER_SIZE = 0.1f;
+constexpr f32 BUTTON_HEIGHT = 50.0f;
 constexpr f32 TOOLBAR_WIDTH = 500.0f + BUTTON_BORDER_SIZE * 2.0f;
 constexpr f32 TOOLBAR_HEIGHT = 50.0f + BUTTON_BORDER_SIZE * 2.0f;
-constexpr f32 RIGHT_PANEL_WIDTH = 330.0f;
+constexpr f32 RIGHT_PANEL_WIDTH = 440.0f;
+constexpr f32 BOTTOM_LEFT_PANEL_WIDTH = 150.0f;
+constexpr f32 BOTTOM_LEFT_PANEL_HEIGHT = 50.0f;
 
 constexpr ImColor COLOR_EBONY = ImColor(0.333f, 0.365f, 0.314f);
 constexpr ImColor COLOR_COOL_GRAY = ImColor(0.549f, 0.573f, 0.675f);
 constexpr ImColor COLOR_GRAY = ImColor(0.502f, 0.502f, 0.502f);
 constexpr ImColor COLOR_LIGHT_GRAY = ImColor(0.602f, 0.602f, 0.602f);
 constexpr ImColor COLOR_PEWTER = ImColor(0.914f, 0.918f, 0.925f);
-
 
 void updateGUIRect(Rectangle *rect) {
     ImVec2 panel_pos = ImGui::GetWindowPos();
@@ -51,25 +53,48 @@ void ShowToolbar(f32 screenWidth, f32 screenHeight) {
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
     constexpr f32 buttonWidth = TOOLBAR_WIDTH * 0.20f;
-
-    ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)COLOR_GRAY);
-
-    ImGui::Button("Select", ImVec2(buttonWidth, TOOLBAR_HEIGHT));
+    ImGui::Button("Select", ImVec2(buttonWidth, BUTTON_HEIGHT));
     ImGui::SameLine();
-    ImGui::Button("Paint", ImVec2(buttonWidth, TOOLBAR_HEIGHT));
+    ImGui::Button("Paint", ImVec2(buttonWidth, BUTTON_HEIGHT));
     ImGui::SameLine();
-    ImGui::Button("Rotate", ImVec2(buttonWidth, TOOLBAR_HEIGHT));
+    ImGui::Button("Rotate", ImVec2(buttonWidth, BUTTON_HEIGHT));
     ImGui::SameLine();
-    ImGui::Button("Erase", ImVec2(buttonWidth, TOOLBAR_HEIGHT));
+    ImGui::Button("Erase", ImVec2(buttonWidth, BUTTON_HEIGHT));
     ImGui::SameLine();
-    ImGui::Button("Zoom", ImVec2(buttonWidth, TOOLBAR_HEIGHT));
+    ImGui::Button("Zoom", ImVec2(buttonWidth, BUTTON_HEIGHT));
     ImGui::SameLine();
-
-    ImGui::PopStyleColor(1);
 
     ImGui::PopStyleVar(3);
 
     ImGui::End();
+}
+
+void ShowBottomLeftPanel(f32 screenWidth, f32 screenHeight) {
+    TraceLog(LOG_INFO, "Screen width: %f, Screen height: %f", screenWidth,
+             screenHeight);
+    ImGui::SetNextWindowPos(ImVec2(0, screenHeight - BOTTOM_LEFT_PANEL_HEIGHT));
+    TraceLog(LOG_INFO, "Bottom left panel pos: 0, %f",
+             screenHeight - BOTTOM_LEFT_PANEL_HEIGHT);
+    ImGui::SetNextWindowSize(
+        ImVec2(BOTTOM_LEFT_PANEL_WIDTH, BOTTOM_LEFT_PANEL_HEIGHT));
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, BUTTON_BORDER_SIZE);
+
+    ImGui::Begin("Bottom left panel", 0,
+                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    //       updateGUIRect(&state->toolPanelRect);
+    constexpr f32 buttonWidth = BOTTOM_LEFT_PANEL_WIDTH * 0.5f;
+    ImGui::Button("Save", ImVec2(buttonWidth, BUTTON_HEIGHT));
+    ImGui::SameLine();
+    ImGui::Button("Load", ImVec2(buttonWidth, BUTTON_HEIGHT));
+    ImGui::SameLine();
+
+    ImGui::End();
+
+    ImGui::PopStyleVar(3);
 }
 
 void DrawGUI(f32 screenWidth, f32 screenHeight) {
@@ -80,14 +105,15 @@ void DrawGUI(f32 screenWidth, f32 screenHeight) {
     ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)COLOR_PEWTER);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
-                          (ImVec4)COLOR_GRAY);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)COLOR_GRAY);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)COLOR_COOL_GRAY);
+    ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)COLOR_GRAY);
 
-    ShowRightHandPanel(screenWidth, screenHeight);
     ShowToolbar(screenWidth, screenHeight);
+    ShowBottomLeftPanel(screenWidth, screenHeight);
+    ShowRightHandPanel(screenWidth, screenHeight);
 
-    ImGui::PopStyleColor(5);
+    ImGui::PopStyleColor(6);
 
     rlImGuiEnd();
 }

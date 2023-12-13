@@ -5,10 +5,10 @@
 
 struct State {
     Camera2D camera;
-    u32 viewportWidth;
-    u32 viewportHeight;
+    u32 screenWidth;
+    u32 screenHeight;
 };
 
-void InitState(State *state);
+void InitState(State *state, u32 screenWidth, u32 screenHeight);
 void ApplyInput(State *state, Input *input);
 void HandleScreenResize(State *state, u32 width, u32 height);
