@@ -51,7 +51,7 @@ i32 main(int argc, char **argv) {
             EndMode2D();
         }
 
-        ApplyGUI(state.screenWidth, state.screenHeight, &input);
+        ApplyGUI(state.screenWidth, state.screenHeight, &input, &state);
 
         EndDrawing();
     }

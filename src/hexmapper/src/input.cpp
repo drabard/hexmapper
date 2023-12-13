@@ -3,6 +3,8 @@
 void InitInput(Input *input) {
     input->mode = INPUT_MODE_SELECT;
     input->cameraShift = (Vector2){0, 0};
+    input->zoomIn = false;
+    input->zoomOut = false;
 }
 
 void CollectInput(Input *input) {

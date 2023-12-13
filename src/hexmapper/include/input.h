@@ -9,9 +9,13 @@ enum InputMode {
 };
 
 struct Input {
+    // Static properties - persist between frames
     InputMode mode;
 
+    // Transient properties - change every frame
     Vector2 cameraShift;
+    bool zoomIn;
+    bool zoomOut;
 };
 
 void InitInput(Input *input);

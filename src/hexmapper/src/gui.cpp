@@ -37,22 +37,20 @@ void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input) {
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
     //       updateGUIRect(&state->toolPanelRect);
-    const char* headerText = "Selection information";
     switch (input->mode) {
         case INPUT_MODE_SELECT:
-            headerText = "Select tiles";
+            ImGui::Text("Select tiles");
             break;
         case INPUT_MODE_PAINT:
-            headerText = "Paint tiles";
+            ImGui::Text("Paint tiles");
             break;
         case INPUT_MODE_ROTATE:
-            headerText = "Rotate tiles";
+            ImGui::Text("Rotate tiles");
             break;
         case INPUT_MODE_ERASE:
-            headerText = "Erase tiles";
+            ImGui::Text("Erase tiles");
             break;
     }
-    ImGui::Text(headerText);
     ImGui::End();
 }
 
@@ -94,11 +92,7 @@ void ShowToolbar(f32 screenWidth, f32 screenHeight, Input* input) {
 }
 
 void ShowBottomLeftPanel(f32 screenWidth, f32 screenHeight) {
-    TraceLog(LOG_INFO, "Screen width: %f, Screen height: %f", screenWidth,
-             screenHeight);
     ImGui::SetNextWindowPos(ImVec2(0, screenHeight - BOTTOM_LEFT_PANEL_HEIGHT));
-    TraceLog(LOG_INFO, "Bottom left panel pos: 0, %f",
-             screenHeight - BOTTOM_LEFT_PANEL_HEIGHT);
     ImGui::SetNextWindowSize(
         ImVec2(BOTTOM_LEFT_PANEL_WIDTH, BOTTOM_LEFT_PANEL_HEIGHT));
 
@@ -121,7 +115,63 @@ void ShowBottomLeftPanel(f32 screenWidth, f32 screenHeight) {
     ImGui::PopStyleVar(3);
 }
 
-void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input) {
+void ShowZoomPanel(f32 screenWidth, f32 screenHeight, Input* input,
+                   State* state) {
+    constexpr f32 ZOOM_BUTTON_HEIGHT = 25.0f;
+    constexpr f32 ZOOM_BUTTON_WIDTH = 50.0f;
+    constexpr f32 ZOOM_INDICATOR_WIDTH = 100.0f;
+    constexpr f32 ZOOM_PANEL_WIDTH = ZOOM_BUTTON_WIDTH + ZOOM_INDICATOR_WIDTH;
+    constexpr f32 ZOOM_PANEL_HEIGHT = ZOOM_BUTTON_HEIGHT * 2.0f;
+
+    f32 viewportWidth = screenWidth - RIGHT_PANEL_WIDTH;
+
+    ImGui::SetNextWindowPos(ImVec2(0.5f * (viewportWidth - ZOOM_PANEL_WIDTH),
+                                   screenHeight - ZOOM_PANEL_HEIGHT));
+    ImGui::SetNextWindowSize(ImVec2(ZOOM_INDICATOR_WIDTH, ZOOM_PANEL_HEIGHT));
+
+    ImGui::Begin("Zoom indicator", 0,
+                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    switch (state->zoomLevel) {
+        case ZOOM_6_MILES:
+            ImGui::TextUnformatted("6 mile hex");
+            break;
+        case ZOOM_12_MILES:
+            ImGui::TextUnformatted("12 mile hex");
+            break;
+        case ZOOM_24_MILES:
+            ImGui::TextUnformatted("24 mile hex");
+            break;
+        case ZOOM_48_MILES:
+            ImGui::TextUnformatted("48 mile hex");
+            break;
+    }
+    ImGui::End();
+
+    ImGui::SetNextWindowPos(
+        ImVec2(0.5f * (viewportWidth - ZOOM_PANEL_WIDTH) + ZOOM_INDICATOR_WIDTH,
+               screenHeight - ZOOM_PANEL_HEIGHT));
+    ImGui::SetNextWindowSize(ImVec2(ZOOM_BUTTON_WIDTH, ZOOM_PANEL_HEIGHT));
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, BUTTON_BORDER_SIZE);
+
+    ImGui::Begin("Zoom buttons", 0,
+                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    if (ImGui::Button("+", ImVec2(ZOOM_BUTTON_WIDTH, ZOOM_BUTTON_HEIGHT))) {
+        input->zoomIn = true;
+    }
+    if (ImGui::Button("-", ImVec2(ZOOM_BUTTON_WIDTH, ZOOM_BUTTON_HEIGHT))) {
+        input->zoomOut = true;
+    }
+    ImGui::End();
+
+    ImGui::PopStyleVar(3);
+}
+
+void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input, State* state) {
     rlImGuiBegin();
 
     // ImGui::ShowDemoWindow();
@@ -138,6 +188,7 @@ void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input) {
     ShowToolbar(screenWidth, screenHeight, input);
     ShowBottomLeftPanel(screenWidth, screenHeight);
     ShowRightHandPanel(screenWidth, screenHeight, input);
+    ShowZoomPanel(screenWidth, screenHeight, input, state);
 
     ImGui::PopStyleColor(7);
 

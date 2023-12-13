@@ -3,10 +3,20 @@
 #include "core.h"
 #include "raylib.h"
 
+enum ZoomLevel {
+    ZOOM_6_MILES = 0,
+    ZOOM_12_MILES,
+    ZOOM_24_MILES,
+    ZOOM_48_MILES,
+    ZOOM_COUNT
+};
+
 struct State {
     Camera2D camera;
     u32 screenWidth;
     u32 screenHeight;
+
+    ZoomLevel zoomLevel;
 };
 
 void InitState(State *state, u32 screenWidth, u32 screenHeight);

@@ -3,6 +3,7 @@
 void InitState(State *state, u32 screenWidth, u32 screenHeight) {
     state->screenWidth = screenWidth;
     state->screenHeight = screenHeight;
+    state->zoomLevel = ZOOM_6_MILES;
     state->camera = (Camera2D){
         (Vector2){state->screenWidth * 0.5f,
                   state->screenHeight * 0.5f},  // offset
@@ -18,6 +19,15 @@ void ApplyInput(State *state, Input *input) {
     if (cameraShiftX || cameraShiftY) {
         state->camera.target.x += cameraShiftX;
         state->camera.target.y += cameraShiftY;
+    }
+    if (input->zoomIn) {
+        i32 newZoomLevel = (i32)state->zoomLevel + 1;
+        state->zoomLevel = (ZoomLevel)(newZoomLevel >= ZOOM_COUNT ? ZOOM_COUNT - 1 : newZoomLevel);
+        input->zoomIn = false;
+    } else if (input->zoomOut) {
+        i32 newZoomLevel = (i32)state->zoomLevel - 1;
+        state->zoomLevel = (ZoomLevel)(newZoomLevel < 0 ? 0 : newZoomLevel);
+        input->zoomOut = false;
     }
 }
 
