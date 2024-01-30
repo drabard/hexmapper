@@ -27,7 +27,7 @@ void DrawTexturePoly(Texture2D texture, Vector2 center, Vector2 *points,
     rlSetTexture(0);
 }
 
-void DrawHexAtCoord(i32 mapX, i32 mapY, Texture2D *texture) {
+void DrawHexAtCoord(i32 mapX, i32 mapY, Texture2D *texture, bool isSelected) {
     constexpr f32 hexXIncrement = HEX_LONG_DIAMETER;
     constexpr f32 hexYIncrement = HEX_RADIUS * 1.5f;
     constexpr f32 hexRotation = 90.0f;
@@ -54,7 +54,7 @@ void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize) {
 
     for (i32 i = startMapX; i < endMapX; ++i) {
         for (i32 j = startMapY; j < endMapY; ++j) {
-            DrawHexAtCoord(i, j, &map->texture);
+            DrawHexAtCoord(i, j, &map->texture, false);
         }
     }
 
