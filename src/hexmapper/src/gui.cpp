@@ -19,15 +19,28 @@ constexpr ImColor COLOR_GRAY = ImColor(0.502f, 0.502f, 0.502f);
 constexpr ImColor COLOR_LIGHT_GRAY = ImColor(0.602f, 0.602f, 0.602f);
 constexpr ImColor COLOR_PEWTER = ImColor(0.914f, 0.918f, 0.925f);
 
-void updateGUIRect(Rectangle* rect) {
-    ImVec2 panel_pos = ImGui::GetWindowPos();
-    ImVec2 panel_size = ImGui::GetWindowSize();
-    *rect = (Rectangle){panel_pos.x, panel_pos.y, panel_size.x, panel_size.y};
-}
-
 void InitGUI() { rlImGuiSetup(true); }
 
-void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input) {
+void ShowImageDirectory(FsNode* directory, i32 siblingIdx) {
+    if(ImGui::TreeNodeEx(directory->path.c_str(), 0)) {
+        for(FsNode file : directory->files) {
+            ImGui::Text("- %s", file.path.c_str());
+        }
+
+        i32 siblingIdx = 0;
+        for(FsNode subdir : directory->dirs) {
+            ShowImageDirectory(&subdir, siblingIdx++);
+        }
+
+        ImGui::TreePop();
+    }
+}
+
+void ShowImagesLibrary(State* state) {
+    ShowImageDirectory(&state->imagesRoot, 0);
+}
+
+void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input, State* state) {
     f32 panelHeight = screenHeight;
 
     ImGui::SetNextWindowPos(ImVec2(screenWidth - RIGHT_PANEL_WIDTH, 0));
@@ -36,10 +49,10 @@ void ShowRightHandPanel(f32 screenWidth, f32 screenHeight, Input* input) {
     ImGui::Begin("Right hand panel", 0,
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-    //       updateGUIRect(&state->toolPanelRect);
     switch (input->mode) {
         case INPUT_MODE_SELECT:
             ImGui::Text("Select tiles");
+            ShowImagesLibrary(state);
             break;
         case INPUT_MODE_PAINT:
             ImGui::Text("Paint tiles");
@@ -145,6 +158,8 @@ void ShowZoomPanel(f32 screenWidth, f32 screenHeight, Input* input,
         case ZOOM_48_MILES:
             ImGui::TextUnformatted("48 mile hex");
             break;
+        default:
+            assert(!"Invalid ZoomLevel.");
     }
     ImGui::End();
 
@@ -174,7 +189,7 @@ void ShowZoomPanel(f32 screenWidth, f32 screenHeight, Input* input,
 void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input, State* state) {
     rlImGuiBegin();
 
-    // ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 
     ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)COLOR_EBONY);
@@ -187,7 +202,7 @@ void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input, State* state) {
 
     ShowToolbar(screenWidth, screenHeight, input);
     ShowBottomLeftPanel(screenWidth, screenHeight);
-    ShowRightHandPanel(screenWidth, screenHeight, input);
+    ShowRightHandPanel(screenWidth, screenHeight, input, state);
     ShowZoomPanel(screenWidth, screenHeight, input, state);
 
     ImGui::PopStyleColor(7);

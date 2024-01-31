@@ -3,3 +3,4 @@
 #include "input.cpp"
 #include "gui.cpp"
 #include "map.cpp"
+#include "fstree.cpp"

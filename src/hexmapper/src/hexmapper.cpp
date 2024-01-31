@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+#include <filesystem>
+#include <unordered_set>
+#include <vector>
+
 #include "core.h"
 #include "gui.h"
 #include "input.h"
@@ -10,7 +14,8 @@
 #include "rlgl.h"
 #include "state.h"
 
-i32 main(int argc, char **argv) {
+
+i32 main(int argc, char** argv) {
     u32 screenWidth = 1920;
     u32 screenHeight = 1024;
 

@@ -27,6 +27,7 @@ Vector2 HEX_TRIANGLE_FAN_TEXCOORDS[] = {
 };
 
 struct Map {
+    // Start here - sparse storage for hexes
     Texture2D texture;
 };
 

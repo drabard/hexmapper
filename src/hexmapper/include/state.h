@@ -3,6 +3,8 @@
 #include "core.h"
 #include "raylib.h"
 
+#include "fstree.h"
+
 enum ZoomLevel {
     ZOOM_6_MILES = 0,
     ZOOM_12_MILES,
@@ -17,6 +19,8 @@ struct State {
     u32 screenHeight;
 
     ZoomLevel zoomLevel;
+
+    FsNode imagesRoot;
 };
 
 void InitState(State *state, u32 screenWidth, u32 screenHeight);

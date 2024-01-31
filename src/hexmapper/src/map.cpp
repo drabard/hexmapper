@@ -57,13 +57,11 @@ void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize) {
             DrawHexAtCoord(i, j, &map->texture, false);
         }
     }
-
-    DrawTexture(map->texture, 0, 0, WHITE);
 }
 
 Map CreateMap() {
     Map result;
-    result.texture = LoadTexture("resources/tiles/mountains_test.png");
+    result.texture = LoadTexture("resources/tiles/mountains/mountains_test.png");
 
     return result;
 }
