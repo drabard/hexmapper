@@ -6,6 +6,26 @@ PROJ_BIN := bin/$(PROJ_NAME)
 PROJ_SRC := src/$(PROJ_NAME)
 DBG_BIN := $(PROJ_BIN)/debug
 
+.PHONY: debug
+debug: $(DBG_BIN)/$(PROJ_NAME)
+
+$(DBG_BIN)/$(PROJ_NAME): external src/hexmapper/src/*.cpp src/hexmapper/include/*.h
+	mkdir -p $(DBG_BIN)
+	$(CC) $(DEBUG_FLAGS) -std=c++17 -c \
+		-I$(PROJ_SRC)/include \
+		-Isrc/ext/raylib/src \
+		-Isrc/ext/imgui \
+		-Isrc/ext/rlImGui \
+		src/$(PROJ_NAME)/src/unity.cpp \
+		-o $(DBG_BIN)/$(PROJ_NAME).o || exit 1
+	$(CC) \
+		$(DBG_BIN)/$(PROJ_NAME).o \
+		bin/ext/imgui_all.a \
+		bin/ext/rlImGui.o \
+		-Lbin/ext -lraylib -lpthread -ldl \
+		-o $(DBG_BIN)/$(PROJ_NAME)
+	cp -rv src/resources $(DBG_BIN)/
+
 .PHONY: run
 run: debug
 	cd $(DBG_BIN) && ./$(PROJ_NAME)
@@ -19,24 +39,6 @@ purge: clean
 	rm -rf src/ext/
 	rm -rf bin/ext/
 	rm -rf imgui.ini
-
-.PHONY: debug
-debug: external
-	mkdir -p bin/$(PROJ_NAME)/debug/
-	$(CC) $(DEBUG_FLAGS) -std=c++17 -c \
-		-I$(PROJ_SRC)/include \
-		-Isrc/ext/raylib/src \
-		-Isrc/ext/imgui \
-		-Isrc/ext/rlImGui \
-		src/$(PROJ_NAME)/src/unity.cpp \
-		-o $(DBG_BIN)/$(PROJ_NAME).o
-	$(CC) \
-		bin/debug/$(PROJ_NAME).o \
-		bin/ext/imgui_all.a \
-		bin/ext/rlImGui.o \
-		-Lbin/ext -lraylib -lpthread -ldl \
-		-o $(DBG_BIN)/$(PROJ_NAME)
-	cp -rv src/resources $(DBG_BIN)/
 
 .PHONY: external
 external: bin/ext/rlImGui.o bin/ext/libraylib.a bin/ext/imgui_all.a
