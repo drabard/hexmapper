@@ -1,5 +1,23 @@
 #include "map.h"
 
+#include "rlgl.h"
+
+Vector2 HEX_TRIANGLE_FAN_POSITIONS[] = {
+    (Vector2){0.0f, HEX_RADIUS},
+    (Vector2){HEX_RADIUS * COS_30, HEX_RADIUS * 0.5f},
+    (Vector2){HEX_RADIUS * COS_30, -HEX_RADIUS * 0.5f},
+    (Vector2){0.0f, -HEX_RADIUS},
+    (Vector2){-HEX_RADIUS * COS_30, -HEX_RADIUS * 0.5f},
+    (Vector2){-HEX_RADIUS * COS_30, HEX_RADIUS * 0.5f},
+    (Vector2){0.0f, HEX_RADIUS}};
+
+Vector2 HEX_TRIANGLE_FAN_TEXCOORDS[] = {
+    (Vector2){0.5f, 1.0f},        (Vector2){0.0f, 1.0f - HALF_TAN_30},
+    (Vector2){0.0f, HALF_TAN_30}, (Vector2){0.5f, 0.0f},
+    (Vector2){1.0f, HALF_TAN_30}, (Vector2){1.0f, 1.0f - HALF_TAN_30},
+    (Vector2){0.5f, 1.0f},
+};
+
 void DrawTexturePoly(Texture2D texture, Vector2 center, Vector2 *points,
                      Vector2 *texcoords, int pointCount, Color tint) {
     rlSetTexture(texture.id);
@@ -61,7 +79,8 @@ void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize) {
 
 Map CreateMap() {
     Map result;
-    result.texture = LoadTexture("resources/tiles/mountains/mountains_test.png");
+    result.texture =
+        LoadTexture("resources/tiles/mountains/mountains_test.png");
 
     return result;
 }

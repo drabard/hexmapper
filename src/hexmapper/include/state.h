@@ -3,6 +3,7 @@
 #include "core.h"
 #include "raylib.h"
 
+#include "input.h"
 #include "fstree.h"
 
 enum ZoomLevel {
