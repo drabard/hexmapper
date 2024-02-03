@@ -10,20 +10,25 @@
 int main(int argc, char** argv) {
     InitWindow(800, 600, "test_texture_storage");
 
-    // Test invalid path. 
     {
+        // Test invalid path. 
+        // An invalid (all zeros) texture should be returned.
         TextureStorage texStorage{};
         Texture2D testTex = GetOrLoadTexture(&texStorage, "i/dont/exist");
         assert(!IsTextureReady(testTex));
     }
 
     {
+        // Test valid path.
+        // Proper texture should be returned.
         TextureStorage texStorage{};
         Texture2D testTex = GetOrLoadTexture(&texStorage, "resources/textures/test_texture0.png");
         assert(IsTextureReady(testTex));
     }
 
     {
+        // Test caching. Second request for the same texture should not return a new one,
+        // but reference to already resident texture.
         TextureStorage texStorage{};
         Texture2D testTex = GetOrLoadTexture(&texStorage, "resources/textures/test_texture0.png");
         assert(IsTextureReady(testTex));
@@ -34,6 +39,7 @@ int main(int argc, char** argv) {
     }
 
     {
+        // Test full storage condition.
         TextureStorage texStorage{};
 
         // There are 200 test textures and we want to check full storage condition.
