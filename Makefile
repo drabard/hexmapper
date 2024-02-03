@@ -1,6 +1,6 @@
 PROJ_NAME := hexmapper
 CXX := clang++
-DEBUG_FLAGS := -g -Wall -O0 -std=c++17
+DEBUG_FLAGS := -g -Werror -O0 -std=c++17
 RELEASE_FLAGS := -O2
 EXTERNAL := bin/ext/rlImGui.o bin/ext/libraylib.a bin/ext/imgui_all.a
 
@@ -28,7 +28,8 @@ $(DBG_BIN_DIR)/$(PROJ_NAME): $(EXTERNAL) src/hexmapper/src/*.cpp src/hexmapper/i
 		bin/ext/rlImGui.o \
 		-Lbin/ext -lraylib -lpthread -ldl \
 		-o $(DBG_BIN_DIR)/$(PROJ_NAME) || exit 1
-	cp -rv src/resources $(DBG_BIN_DIR)/
+	@echo "Compiling resources..."
+	@cp -r src/resources $(DBG_BIN_DIR)/
 
 .PHONY: run
 run: debug
@@ -48,15 +49,17 @@ purge: clean
 # Tests.
 #
 
-TEST_SRC_DIR := $(PROJ_SRC_DIR)/src/test
+TEST_SRC_DIR := $(PROJ_SRC_DIR)/test
 TEST_BIN_DIR := $(PROJ_BIN_DIR)/test
 TEST_SRCS := $(wildcard $(TEST_SRC_DIR)/*.cpp)
+TEST_RES_SRC_DIR := $(TEST_SRC_DIR)/resources
+TEST_RES_DIR := $(TEST_BIN_DIR)/resources
 TESTS := $(patsubst $(TEST_SRC_DIR)/%.cpp,$(TEST_BIN_DIR)/%,$(TEST_SRCS))
 
 .PHONY: test
 test: $(TESTS)
 
-$(TESTS): $(TEST_BIN_DIR)/%: $(TEST_SRC_DIR)/%.cpp debug | $(TEST_BIN_DIR)
+$(TESTS): $(TEST_BIN_DIR)/%: $(TEST_SRC_DIR)/%.cpp debug | $(TEST_RES_DIR) $(TEST_BIN_DIR)
 	@echo "Running test:" $*
 	@$(CXX) $(DEBUG_FLAGS) \
 		-I$(PROJ_SRC_DIR)/include \
@@ -69,11 +72,18 @@ $(TESTS): $(TEST_BIN_DIR)/%: $(TEST_SRC_DIR)/%.cpp debug | $(TEST_BIN_DIR)
 		$< \
 		-Lbin/ext -lraylib -lpthread -ldl \
 		-o $@
-	@$@
-	@echo
+	@cd $(TEST_BIN_DIR) &&\
+		./`basename $@`; \
+		if [ $$? -eq 0 ]; then echo "\033[92mPASS\033[0m"; else echo "\033[91mFAIL\033[0m"; fi
+
+
+$(TEST_RES_DIR): $(TEST_BIN_DIR) $(TEST_RES_SRC_DIR)
+	@echo "Compiling test resources..."
+	@cp -r $(TEST_RES_SRC_DIR) $(TEST_RES_DIR)
 
 $(TEST_BIN_DIR):
 	@mkdir -p $(TEST_BIN_DIR)
+
 
 #
 # External dependencies.
