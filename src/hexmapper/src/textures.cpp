@@ -1,22 +1,24 @@
 #include "textures.h"
 
 Texture2D GetOrLoadTexture(TextureStorage* storage, const char* path) {
-    Texture2D* textures = storage->textures;
+    TextureEntry* textures = storage->textures;
 
     // Try cache first.
     std::unordered_map<std::string, size_t>* texLut = &storage->texLut;
     if(texLut->find(path) != texLut->end()) {
-        return textures[(*texLut)[path]];
+        TextureEntry* texEntry = &textures[(*texLut)[path]];
+        texEntry->used = true;
+        return texEntry->texture;
     }
 
     size_t* freeSlots = storage->freeSlots;
 
-    Texture2D* tex = nullptr;
+    TextureEntry* texEntry = nullptr;
     if(storage->nfree) {
-        tex = &textures[freeSlots[--storage->nfree]];
+        texEntry = &textures[freeSlots[--storage->nfree]];
     }
     else if(storage->ntextures < MAX_STORED_TEXTURES) {
-        tex = &textures[storage->ntextures];
+        texEntry = &textures[storage->ntextures];
         texLut->insert({path, storage->ntextures});
         ++storage->ntextures;
     }
@@ -25,7 +27,23 @@ Texture2D GetOrLoadTexture(TextureStorage* storage, const char* path) {
         return (Texture2D) {};
     }
 
-    Texture2D loadedTexture = LoadTexture(path);
-    *tex = loadedTexture;
-    return *tex;
+    texEntry->used = true;
+    texEntry->texture = LoadTexture(path);
+    return texEntry->texture;
+}
+
+void SweepAndEvict(TextureStorage* storage) {
+    for(size_t i = 0; i < storage->ntextures; ++i) {
+        TextureEntry* te = &storage->textures[i];
+        if(te->texture.id == 0) continue; // This texture is already in the free list.
+
+        if(te->used) {
+            te->used = false;
+        } else {
+            UnloadTexture(te->texture);
+            *te = (TextureEntry) {};
+            assert(storage->nfree < MAX_STORED_TEXTURES);
+            storage->freeSlots[storage->nfree++] = i;
+        }
+    }
 }
