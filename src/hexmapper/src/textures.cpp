@@ -32,7 +32,7 @@ Texture2D GetOrLoadTexture(TextureStorage* storage, const char* path) {
     return texEntry->texture;
 }
 
-void SweepAndEvict(TextureStorage* storage) {
+void SweepAndEvictTextures(TextureStorage* storage) {
     for(size_t i = 0; i < storage->ntextures; ++i) {
         TextureEntry* te = &storage->textures[i];
         if(te->texture.id == 0) continue; // This texture is already in the free list.

@@ -32,4 +32,4 @@ Texture2D GetOrLoadTexture(TextureStorage* storage, const char* path);
 // it's set to false.
 // This should be periodically called to free up space for new textures and remove
 // old ones.
-void SweepAndEvict(TextureStorage* storage);
+void SweepAndEvictTextures(TextureStorage* storage);

@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
         // Try to make space by evicting unused textures. This won't work now,
         // because all the textures have been used since the last sweep (which
         // never happened).
-        SweepAndEvict(&texStorage);
+        SweepAndEvictTextures(&texStorage);
 
         // There is still no space - no textures have been evicted yet.
         ss << "resources/textures/test_texture" << MAX_STORED_TEXTURES
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 
         Texture2D tex0 = GetOrLoadTexture(
             &texStorage, "resources/textures/test_texture1.png");
-        SweepAndEvict(&texStorage);
+        SweepAndEvictTextures(&texStorage);
 
         // Make sure the texture made it through sweep and evict and is not
         // reloaded.
