@@ -13,6 +13,7 @@
 #include "rlImGui.h"
 #include "rlgl.h"
 #include "state.h"
+#include "textures.h"
 
 
 i32 main(int argc, char** argv) {
@@ -59,6 +60,8 @@ i32 main(int argc, char** argv) {
         ApplyGUI(state.screenWidth, state.screenHeight, &input, &state);
 
         EndDrawing();
+
+        SweepAndEvictTextures(&state.textureStorage);
     }
 
     rlImGuiShutdown();

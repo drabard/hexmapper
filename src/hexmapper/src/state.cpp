@@ -3,6 +3,7 @@
 #include "fstree.h"
 
 void InitState(State *state, u32 screenWidth, u32 screenHeight) {
+    *state = (State){};
     state->screenWidth = screenWidth;
     state->screenHeight = screenHeight;
     state->zoomLevel = ZOOM_6_MILES;

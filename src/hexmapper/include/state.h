@@ -5,6 +5,7 @@
 
 #include "input.h"
 #include "fstree.h"
+#include "textures.h"
 
 enum ZoomLevel {
     ZOOM_6_MILES = 0,
@@ -22,6 +23,8 @@ struct State {
     ZoomLevel zoomLevel;
 
     FsNode imagesRoot;
+
+    TextureStorage textureStorage;
 };
 
 void InitState(State *state, u32 screenWidth, u32 screenHeight);
