@@ -4,3 +4,6 @@
 #include "map.cpp"
 #include "textures.cpp"
 #include "fstree.cpp"
+#include "commands/select_tiles.cpp"
+#include "commands/types.cpp"
+#include "commands.cpp"

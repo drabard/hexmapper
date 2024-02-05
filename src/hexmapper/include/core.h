@@ -1,5 +1,6 @@
 #pragma once
-#include <cstdint>
+#include <stdint.h>
+#include <stddef.h>
 
 #define GLSL_VERSION 330
 #define ARRAY_COUNT(x) (sizeof(x) / sizeof(x[0]))

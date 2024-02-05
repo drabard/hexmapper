@@ -11,11 +11,13 @@ EXTERNAL := bin/ext/rlImGui.o bin/ext/libraylib.a bin/ext/imgui_all.a
 PROJ_BIN_DIR := bin/$(PROJ_NAME)
 PROJ_SRC_DIR := src/$(PROJ_NAME)
 DBG_BIN_DIR := $(PROJ_BIN_DIR)/debug
+CPP_FILES := $(shell find src/$(PROJ_NAME)/ -type f -name '*.cpp')
+H_FILES := $(shell find src/$(PROJ_NAME)/ -type f -name '*.h')
 
 .PHONY: debug
 debug: $(DBG_BIN_DIR)/$(PROJ_NAME)
 
-$(DBG_BIN_DIR)/$(PROJ_NAME): $(EXTERNAL) src/hexmapper/src/*.cpp src/hexmapper/include/*.h
+$(DBG_BIN_DIR)/$(PROJ_NAME): $(EXTERNAL) $(CPP_FILES) $(H_FILES)
 	mkdir -p $(DBG_BIN_DIR)
 	$(CXX) $(DEBUG_FLAGS) \
 		-I$(PROJ_SRC_DIR)/include \

@@ -1,6 +1,7 @@
 #include "map.h"
 
 #include "rlgl.h"
+#include "textures.h"
 
 Vector2 HEX_TRIANGLE_FAN_POSITIONS[] = {
     (Vector2){0.0f, HEX_RADIUS},
@@ -62,7 +63,8 @@ void DrawHexAtCoord(i32 mapX, i32 mapY, Texture2D *texture, bool isSelected) {
     DrawPolyLines((Vector2){hexX, hexY}, 6, HEX_RADIUS, hexRotation, BLACK);
 }
 
-void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize) {
+void DrawMap(Map *map, TextureStorage *textureStorage, Vector2 cameraTarget,
+             Vector2 viewportSize) {
     i32 startMapX =
         (cameraTarget.x - viewportSize.x * 0.5f) / HEX_LONG_DIAMETER - 1;
     i32 endMapX = startMapX + (viewportSize.x / HEX_LONG_DIAMETER) + 3;
@@ -70,17 +72,11 @@ void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize) {
         (cameraTarget.y - viewportSize.y * 0.5f) / HEX_RADIUS_1_5 - 1;
     i32 endMapY = startMapY + (viewportSize.y / HEX_RADIUS_1_5) + 3;
 
+    Texture2D texture = GetOrLoadTexture(textureStorage, "resources/tiles/mountains/mountains_test.png"); 
     for (i32 i = startMapX; i < endMapX; ++i) {
         for (i32 j = startMapY; j < endMapY; ++j) {
-            DrawHexAtCoord(i, j, &map->texture, false);
+            DrawHexAtCoord(i, j, &texture, false);
         }
     }
 }
 
-Map CreateMap() {
-    Map result;
-    result.texture =
-        LoadTexture("resources/tiles/mountains/mountains_test.png");
-
-    return result;
-}

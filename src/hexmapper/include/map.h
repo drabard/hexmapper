@@ -10,11 +10,9 @@ constexpr f32 COS_30_2 = 2.0f * COS_30;
 constexpr f32 HALF_TAN_30 = 0.2886751345948129f;
 constexpr f32 HEX_LONG_DIAMETER = HEX_RADIUS * COS_30_2;
 
+struct TextureStorage;
+
 struct Map {
-    // Start here - sparse storage for hexes
-    Texture2D texture;
 };
 
-Map CreateMap();
-
-void DrawMap(Map *map, Vector2 cameraTarget, Vector2 viewportSize);
+void DrawMap(Map *map, TextureStorage*, Vector2 cameraTarget, Vector2 viewportSize);

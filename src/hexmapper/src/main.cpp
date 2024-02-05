@@ -15,7 +15,6 @@
 #include "state.h"
 #include "textures.h"
 
-
 i32 main(int argc, char** argv) {
     u32 screenWidth = 1920;
     u32 screenHeight = 1024;
@@ -33,9 +32,9 @@ i32 main(int argc, char** argv) {
     Input input;
     InitInput(&input);
 
-    Map map = CreateMap();
+    Map map;
 
-    while (!WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE)) {
+    while (!(WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))) {
         CollectInput(&input);
         ApplyInput(&state, &input);
 
@@ -51,7 +50,7 @@ i32 main(int argc, char** argv) {
             BeginMode2D(state.camera);
             ClearBackground(RAYWHITE);
 
-            DrawMap(&map, state.camera.target,
+            DrawMap(&map, &state.textureStorage, state.camera.target,
                     (Vector2){(f32)state.screenWidth, (f32)state.screenHeight});
 
             EndMode2D();
