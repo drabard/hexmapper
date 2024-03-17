@@ -4,6 +4,8 @@ DEBUG_FLAGS := -g -Werror -O0 -std=c++17
 RELEASE_FLAGS := -O2
 EXTERNAL := bin/ext/rlImGui.o bin/ext/libraylib.a bin/ext/imgui_all.a
 
+INTERACTIVE ?= 0
+
 #
 # Project binaries.
 #

@@ -1,30 +1,23 @@
 #pragma once
 
 struct Command;
+struct CommandBuffer;
+
 enum CommandType {
     COMMAND_SELECT_TILES = 0,
     COMMAND_TYPE_COUNT
 };
 
-struct InitCommandInput {
+struct CommandInput {
 };
 
-struct ExecCommandInput {
-};
-
-struct UndoCommandInput {
-};
-
-struct DestroyCommandInput {
-};
-
-using InitCommandFunc = void (*)(Command*, InitCommandInput*);
-using ExecCommandFunc = void (*)(Command*, ExecCommandInput*);
-using UndoCommandFunc = void (*)(Command*, UndoCommandInput*);
-using DestroyCommandFunc = void (*)(Command*, DestroyCommandInput*);
+using CreateCommandFunc = void (*)(Command*, CommandInput*);
+using ExecCommandFunc = void (*)(Command*);
+using UndoCommandFunc = void (*)(Command*);
+using DestroyCommandFunc = void (*)(Command*);
 
 struct CommandFuncs {
-    InitCommandFunc init;
+    CreateCommandFunc create;
     ExecCommandFunc execute;
     UndoCommandFunc undo;
     DestroyCommandFunc destroy;

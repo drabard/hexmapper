@@ -15,6 +15,6 @@ struct CommandBuffer {
     size_t end;
 };
 
-Command* CreateCommand(CommandType, InitCommandInput*);
-void ExecuteCommand(Command*, ExecCommandInput*);
-void DestroyCommand(Command*, DestroyCommandInput*);
+void ExecuteCommand(CommandBuffer*, CommandType, CommandInput*);
+void RedoCommand(CommandBuffer*);
+void UndoCommand(CommandBuffer*);

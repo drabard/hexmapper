@@ -1,9 +1,15 @@
+#include <cassert>
+
 #include "commands.h"
 #include "commands/select_tiles.h"
 
 int main(int argc, char** argv) {
-    Command* cmd = CreateCommand(COMMAND_SELECT_TILES, nullptr);
-    ExecuteCommand(cmd, nullptr);
-    DestroyCommand(cmd, nullptr);
+    CommandBuffer cmdBuf = {};
+
+    for(size_t i = 0; i < MAX_COMMANDS*12; ++i) {
+        ExecuteCommand(&cmdBuf, COMMAND_SELECT_TILES, nullptr);
+        assert(cmdBuf.start < MAX_COMMANDS);
+        assert(cmdBuf.end < MAX_COMMANDS);
+    }
     return 0;
 }

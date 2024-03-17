@@ -3,5 +3,5 @@
 #include "commands/select_tiles.h"
 
 CommandFuncs commandFuncs[COMMAND_TYPE_COUNT] = {
-    {CommandSelectTilesInit, CommandSelectTilesExec, CommandSelectTilesUndo,
+    {CommandSelectTilesCreate, CommandSelectTilesExec, CommandSelectTilesUndo,
      CommandSelectTilesDestroy, sizeof(CommandSelectTiles)}};

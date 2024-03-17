@@ -1,17 +1,16 @@
 #include "commands/select_tiles.h"
 
-void CommandSelectTilesInit(Command*, InitCommandInput*) {
-    printf("CommandCreateSelectTiles\n");
+void CommandSelectTilesCreate(Command* cmd, CommandInput* input) {
 }
 
-void CommandSelectTilesExec(Command*, ExecCommandInput*) {
+void CommandSelectTilesExec(Command* cmd) {
     printf("CommandExecSelectTiles\n");
 }
 
-void CommandSelectTilesUndo(Command*, UndoCommandInput*) {
+void CommandSelectTilesUndo(Command*) {
     printf("CommandUndoSelectTiles\n");
 }
 
-void CommandSelectTilesDestroy(Command*, DestroyCommandInput*) {
+void CommandSelectTilesDestroy(Command*) {
     printf("CommandDestroySelectTiles\n");
 }

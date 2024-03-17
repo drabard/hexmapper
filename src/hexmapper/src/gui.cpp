@@ -189,7 +189,7 @@ void ShowZoomPanel(f32 screenWidth, f32 screenHeight, Input* input,
 void ApplyGUI(f32 screenWidth, f32 screenHeight, Input* input, State* state) {
     rlImGuiBegin();
 
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
 
     ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)COLOR_EBONY);
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)COLOR_EBONY);
